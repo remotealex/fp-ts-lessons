@@ -69,15 +69,29 @@ console.log(eqVector.equals(v1, v2)); // false
 
 import { getEq } from "fp-ts/lib/Array";
 
+// We can create an Eq instance for number[] by using the `getEq`
+// helper from the Array module.
+const eqArrayOfNumbers: Eq<Array<number>> = getEq(eqNumber);
+
+// Note that the order of the array is important!
+console.log("\n----- Test of array number eq -----");
+console.log(eqArrayOfNumbers.equals([1, 2], [1, 2])); // true
+console.log(eqArrayOfNumbers.equals([1, 2], [2, 1])); // false
+
+// We can do the same for more complex types like Point:
 const eqArrayOfPoints: Eq<Array<Point>> = getEq(eqPoint);
 
+// Order of array points is still important
 console.log("\n----- Test of array points eq -----");
 console.log(eqArrayOfPoints.equals([p1, p2], [p1, p2])); // true
-console.log(eqArrayOfPoints.equals([p2, p1], [p2, p1])); // true
+console.log(eqArrayOfPoints.equals([p2, p1], [p1, p2])); // false
 console.log(eqArrayOfPoints.equals([p1, p2], [p2, p3])); // false
 
 // The final way to create a new Eq instance is the `contramap` combinator:
-// Here's the type
+// Here's the type:
+// (f: (b: B) => A) => (fa: Eq<A>) => Eq<B>;
+
+// And broken down:
 // (f: (b: B) => A) => .       pass    a function
 //    (fa: Eq<A>) =>           pass    an Eq instance for A
 // .      Eq<B>                returns an Eq instance for B
@@ -93,6 +107,7 @@ type User = {
 };
 
 // Two users are equal if their `userId` field is equal
+// const eqUser = contramap((user: User) => user.userId)(eqNumber);
 const eqUser = contramap(
   (user: User) => user.userId // function mapping B => A
 )(eqNumber); //                  Eq<A> instance

@@ -161,7 +161,8 @@ console.log(sum(1, [1, 2])); // 4
 
 // curried `sum` function which accepts one param, and
 // returns a function for the second param.
-console.log(sum(1)([1, 2])); // 4
+// concat(concat(concat(1, 1), 2), 3);
+console.log(sum(1)([1, 2, 3])); // 7
 
 // Another example:
 const add10ToNumber = sum(10);
